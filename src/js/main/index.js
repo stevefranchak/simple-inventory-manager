@@ -3,17 +3,20 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import { enableLiveReload } from 'electron-compile';
 import initDatabase from './db';
 
+const path = require('path');
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-const appName = 'Simple Inventory Manager';
+const APP_NAME = 'Simple Inventory Manager';
+const DATABASE_FILENAME = 'inventory.db';
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
 if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 
 const createWindow = async () => {
-  app.setName(appName);
+  app.setName(APP_NAME);
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -52,7 +55,7 @@ const createWindow = async () => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   try {
-    await initDatabase(app);
+    await initDatabase(path.join(app.getPath('userData'), DATABASE_FILENAME));
   } catch(err) {
     return dialog.showMessageBox({
       type: 'error',
@@ -61,7 +64,7 @@ app.on('ready', async () => {
       app.quit();
     });
   }
-  
+
   createWindow();
 });
 
