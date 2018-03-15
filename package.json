@@ -1,7 +1,7 @@
 {
   "name": "simple-inventory-manager",
-  "productName": "simple-inventory-manager",
-  "version": "1.0.0",
+  "productName": "Simple Inventory Manager",
+  "version": "0.0.1",
   "description": "My Electron application description",
   "main": "src/js/main/index.js",
   "scripts": {
@@ -32,7 +32,7 @@
         "packageManager": "npm"
       },
       "electronWinstallerConfig": {
-        "name": "simple_inventory_manager"
+        "name": "Simple Inventory Manager"
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
@@ -50,6 +50,7 @@
     "electron-compile": "^6.4.2",
     "electron-devtools-installer": "^2.2.3",
     "electron-squirrel-startup": "^1.0.0",
+    "nedb": "^1.8.0",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-hot-loader": "^3.1.3"

@@ -1,16 +1,20 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
+import initDatabase from './db';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+const appName = 'Simple Inventory Manager';
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
 if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 
 const createWindow = async () => {
+  app.setName(appName);
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -38,7 +42,7 @@ const createWindow = async () => {
   // The BrowserWindow is hidden until the React component App is mounted.
   // The App component's componentDidMount handler uses ipcRenderer to
   // let the main thread know that it can show the BrowserWindow.
-  ipcMain.on('show' , () => {
+  ipcMain.once('show' , () => {
     mainWindow && mainWindow.show();
   });
 };
@@ -46,7 +50,20 @@ const createWindow = async () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async () => {
+  try {
+    await initDatabase(app);
+  } catch(err) {
+    return dialog.showMessageBox({
+      type: 'error',
+      message: `An error occurred when initializing the database:\n${err}`
+    }, () => {
+      app.quit();
+    });
+  }
+  
+  createWindow();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
