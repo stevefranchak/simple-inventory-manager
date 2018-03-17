@@ -9,10 +9,11 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --cache --color --ext .jsx,.js src"
+    "lint": "eslint --cache --color --ext .jsx,.js src",
+    "test:main": "mocha --require babel-core/register ./test/main/**/*.spec.js"
   },
   "keywords": [],
-  "author": "Steve",
+  "author": "Steve Franchak",
   "license": "MIT",
   "config": {
     "forge": {
@@ -60,12 +61,15 @@
     "babel-plugin-transform-es2015-classes": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "chai": "^4.1.2",
+    "chai-fs": "^2.0.0",
     "electron-forge": "^5.1.1",
     "electron-prebuilt-compile": "1.8.2",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.7.0"
+    "eslint-plugin-react": "^7.7.0",
+    "mocha": "^5.0.4"
   }
 }
