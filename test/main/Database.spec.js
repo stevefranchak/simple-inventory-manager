@@ -56,13 +56,12 @@ describe('Database', function() {
       });
     });
 
-    it('should create a database file and set isReady to true', function(done) {
+    it('should create a database file and set isReady to true', async function() {
       let db = new Database(TEST_DATABASE_PATH);
-      db.connect().then(() => {
-        db.isReady.should.be.true;
-        TEST_DATABASE_PATH.should.be.a.file().and.empty;
-        done();
-      });
+
+      await db.connect();
+      db.isReady.should.be.true;
+      TEST_DATABASE_PATH.should.be.a.file().and.empty;
     });
   });
 
