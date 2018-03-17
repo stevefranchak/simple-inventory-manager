@@ -43,7 +43,7 @@ export class Database {
   }
 }
 
-export default function init(dbPath) {
+export function init(dbPath) {
   return new Promise(async (resolve, reject) => {
     let db;
     try {

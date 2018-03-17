@@ -1,7 +1,7 @@
 const chai = require('chai');
 const should = chai.should();
 
-import initDatabase, { Database, DEFAULT_PATH } from './../../src/js/main/Database';
+import { Database, DEFAULT_PATH } from './../../src/js/main/Database';
 
 chai.use(require('chai-fs'));
 
