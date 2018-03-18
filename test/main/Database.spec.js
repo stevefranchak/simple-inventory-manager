@@ -13,6 +13,63 @@ const os = require('os');
 
 const TEST_DATABASE_PATH = path.join(os.tmpdir(), 'sim_test.db');
 
+// Test whether an inserted or retrieved document object matches the expected
+// properties in a data object. Also tests whether what's passed in for the
+// actual parameter is an object and whether some properties inserted from
+// the underlying DBMS exist.
+const testObjectProperties = (dataObject = {}, actual) => {
+  actual.should.be.an('object');
+
+  // Test properties inserted by the underlying DBMS
+  actual._id.should.be.a('string');
+
+  // Clone the passed dataObject and actual objects so that we don't mutate them
+  const expected = { ...dataObject };
+  const clonedActual = { ...actual };
+
+  // nedb implementation exception: remove any properties from expected that are functions or are undefined
+  // nedb implementation: nedb's deepCopy sets an unsupported property to undefined instead of
+  // removing it, and the actual object will contain these if the actual object
+  // is the object returned from nedb's Datastore#insert(). To better match, remove
+  // unsupported types from expected and any undefined properties in actual.
+  for (let actualOrExpectedObject of [expected, clonedActual]) {
+    for (let property in actualOrExpectedObject) {
+      let value = actualOrExpectedObject[property];
+
+      if (typeof value === 'undefined' || typeof value === 'function') {
+        delete actualOrExpectedObject[property];
+      }
+    }
+  }
+
+  // Any injected properties from the underlying DBMS should be removed as they
+  // are not present in the original test data objects.
+  let { _id, ...rest } = clonedActual;
+
+  // deep equal
+  rest.should.eql(expected);
+};
+
+const TEST_OBJECTS = {
+  person: {
+    name: 'Steve',
+    age: 27,
+    rating: 4.5,
+    isDeveloper: true,
+    location: {
+      city: 'Odenton',
+      state: 'Maryland'
+    },
+    hobbies: ['daydreaming', 'nightdreaming'],
+    lastUpdated: new Date(),
+    job: null,
+    talents: undefined,
+    saySomething: () => {
+      return 'No.';
+    }
+  }
+};
+
 const removeDatabaseFile = (dbPath) => {
   return new Promise((resolve) => {
     fs.unlink(dbPath, (err) => {
@@ -81,6 +138,32 @@ describe('Database', function() {
       db.isReady.should.be.false;
 
       loadDatabase.restore();
+    });
+
+  });
+
+  // Will only test inserting a single document object even though nedb
+  // supports bulk insertions by passing an array. Testing all of nedb's supported
+  // insertion overrides is more testing nedb than it is testing my wrapper function.
+  // The purpose of writing wrapper functions is to abstract away the underlying DBMS,
+  // even though that does slip through the cracks some in this design (e.g. testing
+  // properties inserted by the underlying DBMS; switching to another DBMS likely
+  // would require changes to the tests).
+  describe('#insert()', function() {
+
+    afterEach('Remove created database file for #insert() tests', async function() {
+      await removeDatabaseFile(TEST_DATABASE_PATH);
+    });
+
+    it('should insert an object into a database', async function() {
+      const testData = TEST_OBJECTS.person;
+      const db = new Database(TEST_DATABASE_PATH);
+      await db.connect();
+
+      const insertedItem = await db.insert(testData).should.be.fulfilled;
+      testObjectProperties(testData, insertedItem);
+
+      TEST_DATABASE_PATH.should.be.a.file().and.not.empty;
     });
 
   });
