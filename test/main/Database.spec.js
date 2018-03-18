@@ -64,9 +64,7 @@ const TEST_OBJECTS = {
     lastUpdated: new Date(),
     job: null,
     talents: undefined,
-    saySomething: () => {
-      return 'No.';
-    }
+    saySomething: () => {'No.'}
   }
 };
 
