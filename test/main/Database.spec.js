@@ -5,6 +5,7 @@ const sinon = require('sinon');
 import { Database, DEFAULT_PATH } from './../../src/js/main/Database';
 
 chai.use(require('chai-fs'));
+chai.use(require('chai-as-promised'));
 
 const fs = require('fs');
 const path = require('path');
@@ -69,16 +70,7 @@ describe('Database', function() {
       loadDatabase.yields([new Error()]);
 
       const db = new Database(TEST_DATABASE_PATH);
-
-      // Was not able to get this to work as intended with should.Throw()
-      // I'm not thrilled with this solution
-      let error;
-      try {
-        await db.connect();
-      } catch(err) {
-        error = err;
-      }
-      should.exist(error);
+      await db.connect().should.be.rejected;
       db.isReady.should.be.false;
 
       loadDatabase.restore();
