@@ -13,6 +13,20 @@ const os = require('os');
 
 const TEST_DATABASE_PATH = path.join(os.tmpdir(), 'sim_test.db');
 
+const removeDatabaseFile = (dbPath) => {
+  return new Promise((resolve) => {
+    fs.unlink(dbPath, (err) => {
+      if (err) {
+        // Not considering this a critical error since there may be tests that
+        // are expected to not create a database file (e.g. testing thrown errors).
+        // Also considering whether this should be logged at all.
+        console.error(err.message);
+      }
+      resolve();
+    });
+  });
+};
+
 // These tests are currently tightly coupled to the underlying DBMS
 describe('Database', function() {
   // We don't want to accidentally delete somebody's db even if it's in tmpdir
@@ -47,15 +61,8 @@ describe('Database', function() {
 
   describe('#connect()', function() {
 
-    afterEach('Remove created database file for #connect() tests', function(done) {
-      fs.unlink(TEST_DATABASE_PATH, (err) => {
-        if (err) {
-          // Not considering this a critical error since there may be tests that
-          // are expected to not create a database file (e.g. testing thrown errors).
-          console.error(err.message);
-        }
-        done();
-      });
+    afterEach('Remove created database file for #connect() tests', async function() {
+      await removeDatabaseFile(TEST_DATABASE_PATH);
     });
 
     it('should create a database file and set isReady to true', async function() {
