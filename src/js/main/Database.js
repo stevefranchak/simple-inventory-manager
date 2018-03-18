@@ -1,6 +1,6 @@
-const Datastore = require('nedb');
-const os = require('os');
-const path = require('path');
+import Datastore from 'nedb';
+import os from 'os';
+import path from 'path';
 
 export const DEFAULT_PATH = path.join(os.tmpdir(), 'my.db');
 

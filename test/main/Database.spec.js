@@ -1,15 +1,13 @@
-const chai = require('chai');
-const should = chai.should();
-const sinon = require('sinon');
-
 import { Database, DEFAULT_PATH } from './../../src/js/main/Database';
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+import chai from 'chai';
+import sinon from 'sinon';
 
+const should = chai.should();
 chai.use(require('chai-fs'));
 chai.use(require('chai-as-promised'));
-
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
 
 const TEST_DATABASE_PATH = path.join(os.tmpdir(), 'sim_test.db');
 
