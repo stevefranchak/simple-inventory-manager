@@ -1,5 +1,6 @@
 const chai = require('chai');
 const should = chai.should();
+const sinon = require('sinon');
 
 import { Database, DEFAULT_PATH } from './../../src/js/main/Database';
 
@@ -27,7 +28,7 @@ describe('Database', function() {
   });
 
   it('should have correct defaults with no provided path', function() {
-    let db = new Database();
+    const db = new Database();
     db.should.be.an.instanceof(Database);
     should.not.exist(db.connection);
     db.path.should.equal(DEFAULT_PATH);
@@ -36,7 +37,7 @@ describe('Database', function() {
 
   it('should have correct defaults with a provided path', function() {
     const dbPath = TEST_DATABASE_PATH;
-    let db = new Database(dbPath);
+    const db = new Database(dbPath);
     db.should.be.an.instanceof(Database);
     should.not.exist(db.connection);
     db.path.should.equal(TEST_DATABASE_PATH);
@@ -57,12 +58,32 @@ describe('Database', function() {
     });
 
     it('should create a database file and set isReady to true', async function() {
-      let db = new Database(TEST_DATABASE_PATH);
-
+      const db = new Database(TEST_DATABASE_PATH);
       await db.connect();
       db.isReady.should.be.true;
       TEST_DATABASE_PATH.should.be.a.file().and.empty;
     });
+
+    it('should throw an error if Datastore#loadDatabase() fails', async function() {
+      const loadDatabase = sinon.stub(require('nedb').prototype, 'loadDatabase');
+      loadDatabase.yields([new Error()]);
+
+      const db = new Database(TEST_DATABASE_PATH);
+
+      // Was not able to get this to work as intended with should.Throw()
+      // I'm not thrilled with this solution
+      let error;
+      try {
+        await db.connect();
+      } catch(err) {
+        error = err;
+      }
+      should.exist(error);
+      db.isReady.should.be.false;
+
+      loadDatabase.restore();
+    });
+
   });
 
 });
