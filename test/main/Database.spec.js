@@ -1,4 +1,4 @@
-import { Database, DEFAULT_PATH } from './../../src/js/main/Database';
+import Database, { DEFAULT_PATH } from './../../src/js/main/Database';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
@@ -72,7 +72,6 @@ const removeDatabaseFile = (dbPath, shouldPrintError = true) => {
       if (err && shouldPrintError) {
         // Not considering this a critical error since there may be tests that
         // are expected to not create a database file (e.g. testing thrown errors).
-        // Also considering whether this should be logged at all.
         console.error(err.message);
       }
       resolve();
@@ -80,7 +79,7 @@ const removeDatabaseFile = (dbPath, shouldPrintError = true) => {
   });
 };
 
-// These tests are currently tightly coupled to the underlying DBMS
+// These tests are tightly coupled to the underlying DBMS
 describe('Database', function() {
   // We don't want to accidentally delete somebody's db even if it's in tmpdir
   before('check if TEST_DATABASE_PATH already exists', function(done) {

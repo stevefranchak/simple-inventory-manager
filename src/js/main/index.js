@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
-import { init as initDatabase } from './Database';
+import Database from './Database';
 import path from 'path';
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -53,8 +53,9 @@ const createWindow = async () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  const inventoryDatabase = new Database(path.join(app.getPath('userData'), DATABASE_FILENAME));
   try {
-    await initDatabase(path.join(app.getPath('userData'), DATABASE_FILENAME));
+    await inventoryDatabase.connect();
   } catch(err) {
     return dialog.showMessageBox({
       type: 'error',

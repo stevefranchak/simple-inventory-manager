@@ -4,7 +4,7 @@ import path from 'path';
 
 export const DEFAULT_PATH = path.join(os.tmpdir(), 'my.db');
 
-export class Database {
+export default class Database {
   constructor(dbPath = DEFAULT_PATH) {
     this.connection = undefined;
     this.path = dbPath;
@@ -41,17 +41,4 @@ export class Database {
       });
     });
   }
-}
-
-export function init(dbPath) {
-  return new Promise(async (resolve, reject) => {
-    let db;
-    try {
-      db = new Database(dbPath);
-      await db.connect();
-    } catch (err) {
-      return reject(err);
-    }
-    resolve(db);
-  });
 }
