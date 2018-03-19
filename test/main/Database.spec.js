@@ -66,10 +66,10 @@ const TEST_OBJECTS = {
   }
 };
 
-const removeDatabaseFile = (dbPath) => {
+const removeDatabaseFile = (dbPath, shouldPrintError = true) => {
   return new Promise((resolve) => {
     fs.unlink(dbPath, (err) => {
-      if (err) {
+      if (err && shouldPrintError) {
         // Not considering this a critical error since there may be tests that
         // are expected to not create a database file (e.g. testing thrown errors).
         // Also considering whether this should be logged at all.
@@ -83,7 +83,7 @@ const removeDatabaseFile = (dbPath) => {
 // These tests are currently tightly coupled to the underlying DBMS
 describe('Database', function() {
   // We don't want to accidentally delete somebody's db even if it's in tmpdir
-  before('Check if TEST_DATABASE_PATH already exists', function(done) {
+  before('check if TEST_DATABASE_PATH already exists', function(done) {
     console.log('test');
     fs.access(TEST_DATABASE_PATH, (err) => {
       // err is defined if the file does not exist, so check for the inverse
@@ -95,12 +95,22 @@ describe('Database', function() {
     })
   });
 
+  // Attempt to unlink the test DB file after every test
+  let shouldPrintUnlinkError = true;
+  afterEach('remove created database file for #connect() tests', async function() {
+    await removeDatabaseFile(TEST_DATABASE_PATH, shouldPrintUnlinkError);
+    shouldPrintUnlinkError = true;
+  });
+
   it('should have correct defaults with no provided path', function() {
     const db = new Database();
     db.should.be.an.instanceof(Database);
     should.not.exist(db.connection);
     db.path.should.equal(DEFAULT_PATH);
     db.isReady.should.be.false;
+
+    // Since there was no connection made, we expect there to be no .db file to unlink.
+    shouldPrintUnlinkError = false;
   });
 
   it('should have correct defaults with a provided path', function() {
@@ -110,13 +120,12 @@ describe('Database', function() {
     should.not.exist(db.connection);
     db.path.should.equal(TEST_DATABASE_PATH);
     db.isReady.should.be.false;
+
+    // Since there was no connection made, we expect there to be no .db file to unlink.
+    shouldPrintUnlinkError = false;
   });
 
   describe('#connect()', function() {
-
-    afterEach('Remove created database file for #connect() tests', async function() {
-      await removeDatabaseFile(TEST_DATABASE_PATH);
-    });
 
     it('should create a database file and set isReady to true', async function() {
       const db = new Database(TEST_DATABASE_PATH);
@@ -125,7 +134,7 @@ describe('Database', function() {
       TEST_DATABASE_PATH.should.be.a.file().and.empty;
     });
 
-    it('should throw an error if Datastore#loadDatabase() fails', async function() {
+    it('should reject if Datastore#loadDatabase() fails', async function() {
       const loadDatabase = sinon.stub(require('nedb').prototype, 'loadDatabase');
       loadDatabase.yields([new Error()]);
 
@@ -134,6 +143,8 @@ describe('Database', function() {
       db.isReady.should.be.false;
 
       loadDatabase.restore();
+      // Since there was no connection made, we expect there to be no .db file to unlink.
+      shouldPrintUnlinkError = false;
     });
 
   });
@@ -147,10 +158,6 @@ describe('Database', function() {
   // would require changes to the tests).
   describe('#insert()', function() {
 
-    afterEach('Remove created database file for #insert() tests', async function() {
-      await removeDatabaseFile(TEST_DATABASE_PATH);
-    });
-
     it('should insert an object into a database', async function() {
       const testData = TEST_OBJECTS.person;
       const db = new Database(TEST_DATABASE_PATH);
@@ -160,6 +167,28 @@ describe('Database', function() {
       testObjectProperties(testData, insertedItem);
 
       TEST_DATABASE_PATH.should.be.a.file().and.not.empty;
+    });
+
+    it('should reject if the Database instance has no connection handle', async function() {
+      const testData = TEST_OBJECTS.person;
+      const db = new Database(TEST_DATABASE_PATH);
+
+      await db.insert(testData).should.be.rejected;
+      // Since there was no connection made, we expect there to be no .db file to unlink.
+      shouldPrintUnlinkError = false;
+    });
+
+    it('should reject if Datastore#insert() fails', async function() {
+      const testData = TEST_OBJECTS.person;
+      const insert = sinon.stub(require('nedb').prototype, 'insert');
+      insert.yields([new Error()]);
+
+      const db = new Database(TEST_DATABASE_PATH);
+      await db.connect();
+
+      await db.insert(testData).should.be.rejected;
+
+      insert.restore();
     });
 
   });
