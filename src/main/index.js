@@ -1,14 +1,11 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
-import Database from './Database';
-import path from 'path';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 const APP_NAME = 'Simple Inventory Manager';
-const DATABASE_FILENAME = 'inventory.db';
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -21,11 +18,11 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    show: false
+    show: false,
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/../../index.html`);
+  mainWindow.loadURL(`file://${__dirname}/../../app/index.html`);
 
   // Open the DevTools.
   if (isDevMode) {
@@ -44,8 +41,10 @@ const createWindow = async () => {
   // The BrowserWindow is hidden until the React component App is mounted.
   // The App component's componentDidMount handler uses ipcRenderer to
   // let the main thread know that it can show the BrowserWindow.
-  ipcMain.once('show' , () => {
-    mainWindow && mainWindow.show();
+  ipcMain.once('show', () => {
+    if (mainWindow) {
+      mainWindow.show();
+    }
   });
 };
 
@@ -53,18 +52,6 @@ const createWindow = async () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  const inventoryDatabase = new Database(path.join(app.getPath('userData'), DATABASE_FILENAME));
-  try {
-    await inventoryDatabase.connect();
-  } catch(err) {
-    return dialog.showMessageBox({
-      type: 'error',
-      message: `An error occurred when initializing the database:\n${err}`
-    }, () => {
-      app.quit();
-    });
-  }
-
   createWindow();
 });
 
