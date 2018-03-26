@@ -1,10 +1,12 @@
 import React from 'react';
+import connectDb from '../db.js';
 
 const { ipcRenderer } = require('electron');
 
 export default class App extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
     ipcRenderer.send('show');
+    await connectDb();
   }
 
   render() {

@@ -37,16 +37,17 @@ const createWindow = async () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-
-  // The BrowserWindow is hidden until the React component App is mounted.
-  // The App component's componentDidMount handler uses ipcRenderer to
-  // let the main thread know that it can show the BrowserWindow.
-  ipcMain.once('show', () => {
-    if (mainWindow) {
-      mainWindow.show();
-    }
-  });
 };
+
+// The BrowserWindow is hidden until the React component App is mounted.
+// The App component's componentDidMount handler uses ipcRenderer to
+// let the main thread know that it can show the BrowserWindow.
+ipcMain.once('show', () => {
+  if (mainWindow) {
+    mainWindow.show();
+  }
+});
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
