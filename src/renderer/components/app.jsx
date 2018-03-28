@@ -1,9 +1,10 @@
 import React from 'react';
 import connectDb from '../db.js';
+import { hot } from 'react-hot-loader';
 
 const { ipcRenderer } = require('electron');
 
-export default class App extends React.Component {
+class App extends React.Component {
   async componentDidMount() {
     ipcRenderer.send('show');
     await connectDb();
@@ -17,3 +18,5 @@ export default class App extends React.Component {
     );
   }
 }
+
+export default hot(module)(App);
