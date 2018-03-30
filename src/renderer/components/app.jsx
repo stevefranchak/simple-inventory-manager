@@ -1,6 +1,6 @@
+import { hot } from 'react-hot-loader';
 import React from 'react';
 import connectDb from '../db.js';
-import { hot } from 'react-hot-loader';
 
 const { ipcRenderer } = require('electron');
 
