@@ -23,7 +23,7 @@ if (isDevMode) {
     .reduce((accumulatedActions, currentAction) => (
       Object.assign(
         accumulatedActions,
-        (typeof cli[currentAction] !== 'undefined' ? { [currentAction]: cli[currentAction] } : {}),
+        (typeof cli[currentAction] === 'string' ? { [currentAction]: cli[currentAction] } : {}),
       )
     ),
     {},
