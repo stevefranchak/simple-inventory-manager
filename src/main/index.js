@@ -1,6 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
+import cli from 'commander';
+import packageInfo from '../../package.json';
+import runTestDataAction from '../renderer/test_data';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -9,7 +12,30 @@ const APP_NAME = 'Simple Inventory Manager';
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
-if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
+if (isDevMode) {
+  cli
+    .version(packageInfo.version)
+    .option('--create [class]', 'Create test data for [class]')
+    .option('--remove [class]', 'Remove test data for [class]')
+    .parse(process.argv);
+
+  const userActions = ['create', 'remove']
+    .reduce((accumulatedActions, currentAction) => (
+      Object.assign(
+        accumulatedActions,
+        (typeof cli[currentAction] !== 'undefined' ? { [currentAction]: cli[currentAction] } : {}),
+      )
+    ),
+    {},
+  );
+
+  if (Object.keys(userActions).length) {
+    runTestDataAction(userActions);
+    process.exit();
+  }
+
+  enableLiveReload({ strategy: 'react-hmr' });
+}
 
 const createWindow = async () => {
   app.setName(APP_NAME);
