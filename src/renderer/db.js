@@ -10,6 +10,6 @@ export default async function connect() {
 
   const path = getAppDataDirectory();
   database = new NedbDatabaseConnection(path);
-  database.connect();
+  await database.connect();
   return database;
 }

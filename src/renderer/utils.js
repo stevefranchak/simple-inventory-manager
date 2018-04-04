@@ -1,7 +1,12 @@
 /* eslint import/prefer-default-export: "off" */
 
-import { remote } from 'electron';
+import { remote, app } from 'electron';
 
 export function getAppDataDirectory() {
-  return remote.app.getPath('userData');
+  const PATH = 'userData';
+  if (remote && remote.app) {
+    return remote.app.getPath(PATH);
+  }
+
+  return app.getPath(PATH);
 }
