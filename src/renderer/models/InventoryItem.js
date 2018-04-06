@@ -37,6 +37,23 @@ export default class InventoryItem extends Document {
     };
   }
 
+  static async nextAvailableProductNumber() {
+    const items = await InventoryItem.find({}, {
+      sort: '-productNumber',
+      limit: 1,
+    });
+    if (items.length) {
+      return items[0].productNumber + 1;
+    }
+    return 1;
+  }
+
+  async preValidate() {
+    if (typeof this.productNumber !== 'number') {
+      this.productNumber = await InventoryItem.nextAvailableProductNumber();
+    }
+  }
+
   static collectionName() {
     return 'inventory_items';
   }
