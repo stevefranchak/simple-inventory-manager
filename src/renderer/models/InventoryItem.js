@@ -1,5 +1,6 @@
 import { Document } from 'camo';
 import Size from './Size';
+import Photo from './Photo';
 
 export default class InventoryItem extends Document {
   constructor() {
@@ -24,6 +25,10 @@ export default class InventoryItem extends Document {
 
     this.size = {
       type: Size,
+    };
+
+    this.photos = {
+      type: [Photo],
     };
 
     this.created = {

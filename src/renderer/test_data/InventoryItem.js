@@ -14,6 +14,11 @@ const testData = [
       height: 4,
       unit: 'in',
     },
+    photos: [
+      {
+        path: '/tmp/photo1.png',
+      },
+    ],
   },
   {
     productName: 'Third Product',
