@@ -5,6 +5,7 @@ import connectDb from '../db.js';
 import InventoryList from './container/InventoryList';
 import InventoryItemDetails from './container/InventoryItemDetails';
 import InventoryItemModifier from './container/InventoryItemModifier';
+import BaseStyles from '../styles';
 
 const { ipcRenderer } = require('electron');
 
@@ -30,6 +31,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        {BaseStyles() /* allows style changes to hot reload */}
         Database is {this.state.databaseHandle ? 'Connected' : 'Not Connected'} <br />
         <Switch>
           <Redirect exact path="/" to="/inventory" />
