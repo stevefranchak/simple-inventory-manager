@@ -13,7 +13,7 @@ export default () => injectGlobal`
   }
 
   body {
-    background-color: ${colors.DARKER_GRAY};
+    background-color: ${colors.LIGHT_GRAY};
     font-size: 1.6rem;
     line-height: 1.5;
   }

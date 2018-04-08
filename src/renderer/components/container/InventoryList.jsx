@@ -1,7 +1,12 @@
 import React from 'react';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faPlus from '@fortawesome/fontawesome-free-solid/faPlus';
 import Page from '../presentation/Page';
 import AppBar from '../presentation/AppBar';
 import PageHeader from '../presentation/PageHeader';
+import Card from '../presentation/Card';
+import Circle from '../presentation/Circle';
+import { colors, spacing } from '../../styles/constants';
 
 export default class InventoryList extends React.Component {
   render() {
@@ -9,7 +14,19 @@ export default class InventoryList extends React.Component {
       <Page>
         <AppBar>
           <PageHeader>Inventory</PageHeader>
+          <Circle
+            mini
+            backgroundColor={colors.BLUE}
+            fixed
+            right={spacing.APP_BAR_HOR_PADDING}
+            bottom={spacing.APP_BAR_HOR_PADDING}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </Circle>
         </AppBar>
+        <Card>
+          Stuff in it
+        </Card>
       </Page>
     );
   }

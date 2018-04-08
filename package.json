@@ -48,6 +48,9 @@
     }
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.5",
+    "@fortawesome/fontawesome-free-solid": "^5.0.9",
+    "@fortawesome/react-fontawesome": "0.0.18",
     "camo": "https://github.com/stevefranchak/camo/tarball/master",
     "commander": "^2.15.1",
     "electron-compile": "^6.4.2",
