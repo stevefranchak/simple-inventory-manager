@@ -33,7 +33,7 @@
         "packageManager": "npm"
       },
       "electronWinstallerConfig": {
-        "name": "Simple Inventory Manager"
+        "name": "SimpleInventoryManager"
       },
       "electronInstallerDebian": {},
       "electronInstallerRedhat": {},
@@ -51,6 +51,7 @@
     "camo": "https://github.com/stevefranchak/camo/tarball/master",
     "commander": "^2.15.1",
     "electron-compile": "^6.4.2",
+    "electron-context-menu": "^0.9.1",
     "electron-devtools-installer": "^2.2.3",
     "electron-squirrel-startup": "^1.0.0",
     "material-ui": "^1.0.0-beta.41",
@@ -60,6 +61,7 @@
     "react-hot-loader": "^4.0.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "roboto-fontface": "^0.9.0",
     "styled-components": "^3.2.5",
     "styled-normalize": "^4.0.0"
   },

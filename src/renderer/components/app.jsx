@@ -32,7 +32,7 @@ class App extends React.Component {
     return (
       <div>
         {BaseStyles() /* allows style changes to hot reload */}
-        Database is {this.state.databaseHandle ? 'Connected' : 'Not Connected'} <br />
+
         <Switch>
           <Redirect exact path="/" to="/inventory" />
           <Route exact path="/inventory" component={InventoryList} />

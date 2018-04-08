@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 import cli from 'commander';
+import contextMenu from 'electron-context-menu';
 import packageInfo from '../../package.json';
 import initTestDataRunner from '../renderer/test_data';
 
@@ -47,6 +48,8 @@ async function main() {
       height: 600,
       show: false,
     });
+
+    contextMenu();
 
     // and load the index.html of the app.
     mainWindow.loadURL(`file://${__dirname}/../../app/index.html`);

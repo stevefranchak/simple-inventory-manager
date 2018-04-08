@@ -1,21 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Page from '../presentation/Page';
+import AppBar from '../presentation/AppBar';
+import PageHeader from '../presentation/PageHeader';
 
 export default class InventoryList extends React.Component {
-  async componentDidMount() {
-    console.log(this.props);
-  }
-
   render() {
     return (
-      <div>
-        InventoryList <br />
-        <Link to="/">/</Link> <br />
-        <Link to="/inventory">/inventory</Link> <br />
-        <Link to="/inventory/add">/inventory/add</Link> <br />
-        <Link to="/inventory/1">/inventory/1</Link> <br />
-        <Link to="/inventory/1/edit">/inventory/1/edit</Link> <br />
-      </div>
+      <Page>
+        <AppBar>
+          <PageHeader>Inventory</PageHeader>
+        </AppBar>
+      </Page>
     );
   }
 }
