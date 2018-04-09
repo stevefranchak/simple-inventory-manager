@@ -5,7 +5,8 @@ import Page from '../presentation/Page';
 import AppBar from '../presentation/AppBar';
 import PageHeader from '../presentation/PageHeader';
 import Card from '../presentation/Card';
-import Circle from '../presentation/Circle';
+import CircleButton from './CircleButton';
+import NoItemsParagraph from './NoItemsParagraph';
 import { colors, spacing } from '../../styles/constants';
 
 export default class InventoryList extends React.Component {
@@ -14,19 +15,24 @@ export default class InventoryList extends React.Component {
       <Page>
         <AppBar>
           <PageHeader>Inventory</PageHeader>
-          <Circle
-            mini
-            backgroundColor={colors.BLUE}
-            fixed
-            right={spacing.APP_BAR_HOR_PADDING}
-            bottom={spacing.APP_BAR_HOR_PADDING}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Circle>
         </AppBar>
         <Card>
-          Stuff in it
+          <NoItemsParagraph
+            message="There are no inventory items in the system."
+            buttonLabel="Add a New Item"
+            buttonTo="/inventory/add"
+          />
         </Card>
+        <CircleButton
+          linkTo="/inventory/add"
+          mini
+          backgroundColor={colors.BLUE}
+          fixed
+          right={spacing.APP_BAR_HOR_PADDING}
+          bottom={spacing.APP_BAR_HOR_PADDING}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </CircleButton>
       </Page>
     );
   }

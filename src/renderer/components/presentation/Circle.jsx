@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import tinycolor from 'tinycolor2';
 import { colors } from '../../styles/constants';
 
 const Circle = styled.div`
@@ -10,6 +11,7 @@ const Circle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 1px 2px 5px 1px ${colors.SHADOW_SHADE};
 
   ${
     props => (
@@ -19,6 +21,18 @@ const Circle = styled.div`
         ${typeof props.right !== 'undefined' ? `right: ${props.right};` : ''}
         ${typeof props.bottom !== 'undefined' ? `bottom: ${props.bottom};` : ''}
         ${typeof props.left !== 'undefined' ? `left: ${props.left};` : ''}
+      ` : ''
+    )
+  }
+
+  ${
+    props => (
+      props.isButton ? `
+        cursor: pointer;
+
+        &:hover {
+          background-color: ${tinycolor(props.backgroundColor).darken(5)}
+        }
       ` : ''
     )
   }

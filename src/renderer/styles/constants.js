@@ -6,6 +6,7 @@ export const colors = {
   WHITE: '#FFF',
   BLUE: '#2196F3',
   SHADOW_SHADE: 'rgba(0, 0, 0, .26)',
+  SUPPORTING_TEXT: 'rgba(0, 0, 0, .87)',
 };
 
 export const spacing = {
